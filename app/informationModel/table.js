@@ -1,14 +1,20 @@
 'use strict'
 
-const Sequelize = require('Sequelize')
-
 module.exports = app => {
-  const { STRING, ENUM, INTEGER, DATE, BIGINT } = Sequelize
+  const { STRING, ENUM, INTEGER, DATE, BIGINT } = app.Sequelize
 
-  const Table = app.sequelizeInformationSchema.define('table', {
+  const bizSchema = app.config.sequelize.datasources.find(datasource => datasource.alias === 'biz').database
+
+  const Table = app.informationModel.define('table', {
     tableCatalog: { type: STRING(64), field: 'TABLE_CATALOG' },
-    tableSchema: { type: STRING(64), field: 'TABLE_SCHEMA' },
-    tableName: { type: STRING(64), field: 'TABLE_NAME' },
+    tableSchema: {
+      type: STRING(64),
+      field: 'TABLE_SCHEMA'
+    },
+    tableName: {
+      type: STRING(64),
+      field: 'TABLE_NAME'
+    },
     tableType: { type: ENUM('BASE TABLE', 'VIEW', 'SYSTEM VIEW'), field: 'TABLE_TYPE' },
     engine: { type: STRING(64), field: 'ENGINE' },
     version: { type: INTEGER, field: 'VERSION' },
@@ -28,8 +34,18 @@ module.exports = app => {
     createOptions: { type: STRING(256), field: 'CREATE_OPTIONS' },
     tableComment: { type: STRING(256), field: 'TABLE_COMMENT' }
   }, {
+    defaultScope: {
+      where: {
+        tableSchema: bizSchema
+      }
+    },
     timestamps: false,
     tableName: 'TABLES'
   })
+
+  Table.removeAttribute('id')
+  Table.associate = () => {
+    app.informationModel.Table.hasMany(app.informationModel.Column, { sourceKey: 'TABLE_NAME' })
+  }
   return Table
 }

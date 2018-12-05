@@ -8,7 +8,7 @@ class ApiController extends Controller {
     const retData = {}
     dictionaryData.forEach(record => {
       const item = Object.assign(record.dataValues)
-      item.categoryName = `${item.tableName}-${item.columnName}`
+      item.categoryName = record.categoryName
       if (!retData[item.categoryName]) {
         retData[item.categoryName] = []
       }

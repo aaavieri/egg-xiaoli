@@ -1,8 +1,5 @@
 'use strict'
 
-const Sequelize = require('sequelize')
-const informationModel = require('./app/informationModel')
-
 class AppBootHook {
   constructor(app) {
     this.app = app
@@ -12,28 +9,28 @@ class AppBootHook {
     // Ready to call configDidLoad,
     // Config, plugin files are referred,
     // this is the last chance to modify the config.
-    const { host, port, username, password } = this.app.config.sequelize
-    const sequelizeInformationSchema = new Sequelize('information_schema', username, password, {
-      host,
-      port,
-      dialect: 'mysql',
-      operatorsAliases: false,
-
-      pool: {
-        max: 5,
-        min: 0,
-        acquire: 30000,
-        idle: 10000
-      }
-    })
-    this.app.sequelizeInformationSchema = sequelizeInformationSchema
-
-    this.app.informationModel = {}
-    Object.keys(informationModel).forEach(key => {
-      if (typeof informationModel[key] === 'function') {
-        this.app.informationModel[this.getInformationModelKey(key)] = informationModel[key](this.app)
-      }
-    })
+    // const { host, port, username, password } = this.app.config.sequelize
+    // const sequelizeInformationSchema = new Sequelize('information_schema', username, password, {
+    //   host,
+    //   port,
+    //   dialect: 'mysql',
+    //   operatorsAliases: false,
+    //
+    //   pool: {
+    //     max: 5,
+    //     min: 0,
+    //     acquire: 30000,
+    //     idle: 10000
+    //   }
+    // })
+    // this.app.sequelizeInformationSchema = sequelizeInformationSchema
+    //
+    // this.app.informationModel = {}
+    // Object.keys(informationModel).forEach(key => {
+    //   if (typeof informationModel[key] === 'function') {
+    //     this.app.informationModel[this.getInformationModelKey(key)] = informationModel[key](this.app)
+    //   }
+    // })
   }
 
   configDidLoad() {

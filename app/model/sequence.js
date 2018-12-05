@@ -3,12 +3,10 @@
 module.exports = app => {
   const { STRING, INTEGER, DATE, BOOLEAN } = app.Sequelize
 
-  const Dictionary = app.model.define('dictionary', {
-    tableName: { type: STRING(30), primaryKey: true, field: 'table_name' },
-    columnName: { type: STRING(30), primaryKey: true, field: 'column_name' },
-    value: { type: STRING(10), primaryKey: true },
-    name: STRING(45),
-    displayOrder: { type: INTEGER, field: 'display_order' },
+  const Sequence = app.model.define('sequence', {
+    tableName: { type: STRING(30), field: 'table_name', primaryKey: true },
+    prefix: { type: STRING(5), primaryKey: true },
+    sequenceNumber: { type: INTEGER, field: 'sequence_number' },
     delFlag: { type: BOOLEAN, field: 'del_flag' },
     createTime: { type: DATE, field: 'create_time' },
     createUser: { type: STRING(10), field: 'create_user' },
@@ -21,13 +19,8 @@ module.exports = app => {
         delFlag: false
       }
     },
-    getterMethods: {
-      categoryName() {
-        return `${this.tableName}-${this.columnName}`
-      }
-    },
     timestamps: false,
-    tableName: 't_dictionary'
+    tableName: 't_sequence'
   })
-  return Dictionary
+  return Sequence
 }

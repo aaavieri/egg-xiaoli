@@ -82,5 +82,9 @@ module.exports = {
         modelName = 'Medical'
     }
     return modelName
+  },
+
+  distinctArray(array) {
+    return Array.from(new Set(array))
   }
 }
